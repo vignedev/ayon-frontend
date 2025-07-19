@@ -17,6 +17,7 @@ import { useGetProjectQuery } from '@queries/project/enhancedProject'
 import { useGetProjectAddonsQuery } from '@shared/api'
 import { TabPanel, TabView } from 'primereact/tabview'
 import AppNavLinks from '@containers/header/AppNavLinks'
+import { NavItemRightSticky } from '@containers/header/AppNavLinks.styled'
 import { SlicerProvider } from '@context/SlicerContext'
 import { EntityListsProvider } from '@pages/ProjectListsPage/context'
 import useLoadRemoteProjectPages from '../../remote/useLoadRemotePages'
@@ -177,28 +178,27 @@ const ProjectPage = () => {
         })),
       { node: 'spacer' },
       {
+        as: NavItemRightSticky,
         node: (
-          <Button
-            icon={(module in moduleArticleMapping) ? 'help' : 'live_help'}
-            onClick={() => {
-              if (module in moduleArticleMapping)
-                openSupport('ShowArticle', moduleArticleMapping[module], true)
-              else
-                openSupport('NewMessage', `Can you help me know more about the ${upperFirst(module)} page?`, true)
-            }}
-            variant='text'
-          />
-        )
-      },
-      {
-        node: (
-          <Button
-            icon="more_horiz"
-            onClick={() => {
-              setShowContextDialog(true)
-            }}
-            variant="text"
-          />
+          <>
+            <Button
+              icon={(module in moduleArticleMapping) ? 'help' : 'live_help'}
+              onClick={() => {
+                if (module in moduleArticleMapping)
+                  openSupport('ShowArticle', moduleArticleMapping[module], true)
+                else
+                  openSupport('NewMessage', `Can you help me know more about the ${upperFirst(module)} page?`, true)
+              }}
+              variant='text'
+            />
+            <Button
+              icon="more_horiz"
+              onClick={() => {
+                setShowContextDialog(true)
+              }}
+              variant="text"
+            />
+          </>
         ),
       },
     ],

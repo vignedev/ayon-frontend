@@ -64,3 +64,17 @@ export const NavItem = styled.li`
     }
   }
 `
+
+export const NavItemRightSticky = styled.li`
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  right: 0;
+
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--panel-background), transparent 5%) 2em);
+  padding-left: 2em;
+
+  /* make it so the background extends on top, in order to cover an active (taller) tab */
+  margin-top: -1em;
+  padding-top: 1em;
+`
