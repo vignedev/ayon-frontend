@@ -75,6 +75,14 @@ export const NavItemRightSticky = styled.li`
   padding-left: 2em;
 
   /* make it so the background extends on top, in order to cover an active (taller) tab */
-  margin-top: -1em;
-  padding-top: 1em;
+  margin-top: -1px;
+  padding-top: 3px;
+  padding-bottom: 2px;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0; height: 1px; bottom: 0; right: 0;
+    background: linear-gradient(90deg, transparent, var(--md-sys-color-outline-variant) 1.5em);
+  }
 `
