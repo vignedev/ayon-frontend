@@ -182,9 +182,9 @@ const ProjectPage = () => {
             icon={(module in moduleArticleMapping) ? 'help' : 'live_help'}
             onClick={() => {
               if (module in moduleArticleMapping)
-                openSupport('ShowArticle', moduleArticleMapping[module])
+                openSupport('ShowArticle', moduleArticleMapping[module], true)
               else
-                openSupport('NewMessage', `Can you help me know more about the ${upperFirst(module)} page?`)
+                openSupport('NewMessage', `Can you help me know more about the ${upperFirst(module)} page?`, true)
             }}
             variant='text'
           />
