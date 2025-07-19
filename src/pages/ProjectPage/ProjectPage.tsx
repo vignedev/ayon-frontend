@@ -24,10 +24,11 @@ import { Navigate } from 'react-router-dom'
 import ProjectPubSub from './ProjectPubSub'
 import NewListFromContext from '@pages/ProjectListsPage/components/NewListDialog/NewListFromContext'
 import { RemoteAddonProject } from '@shared/context'
-import { VersionUploadProvider, UploadVersionDialog } from '@shared/components'
+import { VersionUploadProvider, UploadVersionDialog, useFeedback } from '@shared/components'
 import { productSelected } from '@state/context'
 import useGetBundleAddonVersions from '@hooks/useGetBundleAddonVersions'
 import ProjectReviewsPage from '@pages/ProjectListsPage/ProjectReviewsPage'
+import { upperFirst } from 'lodash'
 
 const ProjectContextInfo = () => {
   /**
@@ -65,6 +66,15 @@ const ProjectPage = () => {
     { projectName: projectName || '' },
     { skip: !projectName },
   )
+  const { openSupport } = useFeedback()
+
+  // this list is populated from https://help.ayon.app/collections/0376560-production-tracking
+  const moduleArticleMapping: Record<string, string> = {
+    'overview': '7885519',
+    'tasks': '5526719',
+    'lists': '7382645',
+    'reviews': '8669165',
+  } as const
 
   const {
     data: addonsData = [],
@@ -169,6 +179,20 @@ const ProjectPage = () => {
       {
         node: (
           <Button
+            icon={(module in moduleArticleMapping) ? 'help' : 'live_help'}
+            onClick={() => {
+              if (module in moduleArticleMapping)
+                openSupport('ShowArticle', moduleArticleMapping[module])
+              else
+                openSupport('NewMessage', `Can you help me know more about the ${upperFirst(module)} page?`)
+            }}
+            variant='text'
+          />
+        )
+      },
+      {
+        node: (
+          <Button
             icon="more_horiz"
             onClick={() => {
               setShowContextDialog(true)
@@ -178,7 +202,7 @@ const ProjectPage = () => {
         ),
       },
     ],
-    [addonsData, projectName, remotePages, matchedAddons],
+    [addonsData, projectName, module, remotePages, matchedAddons],
   )
 
   //
