@@ -17,6 +17,7 @@ import { useGetProjectQuery } from '@queries/project/enhancedProject'
 import { useGetProjectAddonsQuery } from '@shared/api'
 import { TabPanel, TabView } from 'primereact/tabview'
 import AppNavLinks from '@containers/header/AppNavLinks'
+import { NavItemRightSticky } from '@containers/header/AppNavLinks.styled'
 import { SlicerProvider } from '@context/SlicerContext'
 import { EntityListsProvider } from '@pages/ProjectListsPage/context'
 import useLoadRemoteProjectPages from '../../remote/useLoadRemotePages'
@@ -24,10 +25,11 @@ import { Navigate } from 'react-router-dom'
 import ProjectPubSub from './ProjectPubSub'
 import NewListFromContext from '@pages/ProjectListsPage/components/NewListDialog/NewListFromContext'
 import { RemoteAddonProject } from '@shared/context'
-import { VersionUploadProvider, UploadVersionDialog } from '@shared/components'
+import { VersionUploadProvider, UploadVersionDialog, useFeedback } from '@shared/components'
 import { productSelected } from '@state/context'
 import useGetBundleAddonVersions from '@hooks/useGetBundleAddonVersions'
 import ProjectReviewsPage from '@pages/ProjectListsPage/ProjectReviewsPage'
+import { upperFirst } from 'lodash'
 
 const ProjectContextInfo = () => {
   /**
@@ -65,6 +67,15 @@ const ProjectPage = () => {
     { projectName: projectName || '' },
     { skip: !projectName },
   )
+  const { openSupport } = useFeedback()
+
+  // this list is populated from https://help.ayon.app/collections/0376560-production-tracking
+  const moduleArticleMapping: Record<string, string> = {
+    'overview': '7885519',
+    'tasks': '5526719',
+    'lists': '7382645',
+    'reviews': '8669165',
+  } as const
 
   const {
     data: addonsData = [],
@@ -167,18 +178,31 @@ const ProjectPage = () => {
         })),
       { node: 'spacer' },
       {
+        as: NavItemRightSticky,
         node: (
-          <Button
-            icon="more_horiz"
-            onClick={() => {
-              setShowContextDialog(true)
-            }}
-            variant="text"
-          />
+          <>
+            <Button
+              icon={(module in moduleArticleMapping) ? 'help' : 'live_help'}
+              onClick={() => {
+                if (module in moduleArticleMapping)
+                  openSupport('ShowArticle', moduleArticleMapping[module], true)
+                else
+                  openSupport('NewMessage', `Can you help me know more about the ${upperFirst(module)} page?`, true)
+              }}
+              variant='text'
+            />
+            <Button
+              icon="more_horiz"
+              onClick={() => {
+                setShowContextDialog(true)
+              }}
+              variant="text"
+            />
+          </>
         ),
       },
     ],
-    [addonsData, projectName, remotePages, matchedAddons],
+    [addonsData, projectName, module, remotePages, matchedAddons],
   )
 
   //

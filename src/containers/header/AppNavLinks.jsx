@@ -70,6 +70,7 @@ const AppNavLinks = ({ links = [] }) => {
               endContent,
               uriSync,
               module,
+              as,
               ...props
             } = {},
             idx,
@@ -87,7 +88,10 @@ const AppNavLinks = ({ links = [] }) => {
               // if item is a node a spacer, return spacer
               if (node === 'spacer') {
                 return <Spacer key={idx} />
-              } else return <li key={idx}>{node}</li>
+              } else {
+                const Wrapper = as || 'li'
+                return <Wrapper key={idx}>{node}</Wrapper>
+              }
             }
 
             return (
